@@ -46,6 +46,10 @@ class UserUpdate(BaseModel):
         return v.strip() if v else None
 
 
+class VerifyEmailRequest(BaseModel):
+    token: str
+
+
 # ============ RESPONSE SCHEMAS ============
 
 
@@ -54,6 +58,7 @@ class UserResponse(BaseModel):
     email: EmailStr
     full_name: Optional[str]
     is_active: bool
+    is_verified: bool
     created_at: datetime
     updated_at: Optional[datetime]
 
@@ -70,6 +75,13 @@ class TokenResponse(BaseModel):
 class AuthResponse(BaseModel):
     user: UserResponse
     token: TokenResponse
+    # True if a verification email was actually sent (or would have been,
+    # in dev mode) — lets the frontend show "check your email" messaging.
+    verification_required: bool = True
+
+
+class MessageResponse(BaseModel):
+    message: str
 
 
 # ============ ERROR SCHEMAS ============

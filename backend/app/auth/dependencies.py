@@ -63,6 +63,23 @@ async def get_current_active_user(
     return current_user
 
 
+async def get_current_verified_user(
+    current_user: User = Depends(get_current_active_user),
+) -> User:
+    """
+    Same as get_current_active_user, but also requires email verification.
+    Use this on endpoints you want to gate behind verification (e.g. scan
+    upload) rather than blocking login entirely — this lets someone
+    explore the app but not use the core feature until they verify.
+    """
+    if not current_user.is_verified:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Please verify your email before using this feature.",
+        )
+    return current_user
+
+
 async def get_current_user_optional(
     token: Optional[str] = Depends(oauth2_scheme_optional),
     db: Session = Depends(get_db),
