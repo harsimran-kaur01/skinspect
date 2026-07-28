@@ -46,3 +46,9 @@ logs/
 htmlcov/
 .pytest_cache/
 .tox/
+
+# Uploads
+backend/uploads/
+*.jpg
+*.png
+*.jpeg

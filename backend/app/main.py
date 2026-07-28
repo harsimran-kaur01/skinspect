@@ -9,6 +9,10 @@ from .config import settings
 from .database import init_db, engine
 from .routers import auth
 from . import models
+from .routers import auth, scans, questionnaire, derm_locator
+
+# ... then
+
 
 # Configure logging
 logging.basicConfig(
@@ -96,8 +100,9 @@ app.add_middleware(
 # ============ ROUTERS ============
 
 app.include_router(auth.router)
-
-
+app.include_router(scans.router)
+app.include_router(questionnaire.router)
+app.include_router(derm_locator.router)
 # ============ HEALTH CHECKS ============
 
 
