@@ -1,0 +1,15 @@
+torch==2.4.1
+torchvision==0.19.1
+
+segmentation-models-pytorch==0.3.4
+efficientnet-pytorch==0.7.1
+
+opencv-python==4.10.0.84
+numpy==1.26.4
+pillow==10.4.0
+pyyaml==6.0.2
+
+mediapipe==0.10.21
+scikit-image==0.24.0
+passlib[bcrypt]==1.7.4
+bcrypt==4.0.1

@@ -1,0 +1,25 @@
+acne:
+  model_path: "models/acne_model.pth"
+  input_size: 224
+  confidence_threshold: 0.5
+  num_classes: 4
+  dropout: 0.3
+
+wrinkle:
+  model_path: "models/wrinkle_model.pth"
+  input_size: 224
+  confidence_threshold: 0.5
+  num_classes: 4
+  dropout: 0.3
+
+preprocess:
+  target_size: [224, 224]
+  normalize: true
+
+output:
+  schema_version: "1.0.0"
+
+photo_guidance:
+  min_brightness: 80
+  max_brightness: 200
+  min_face_size: 200

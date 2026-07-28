@@ -1,0 +1,77 @@
+{
+  "scan_id": "f89ddd46-2cf7-4538-bdc5-269ce8af28ba",
+  "user_id": null,
+  "image_url": "../tests/sample_images/real_face.png",
+  "thumbnail_url": null,
+  "analysis_date": "2026-07-25T18:02:16.227101+00:00Z",
+  "skin_conditions": [
+    {
+      "condition": "acne",
+      "confidence": 0.746,
+      "severity": "mild",
+      "affected_area_percentage": 15,
+      "description": "Acne detected with 75% confidence"
+    },
+    {
+      "condition": "wrinkles",
+      "confidence": 0.735,
+      "severity": "none",
+      "affected_area_percentage": 0,
+      "description": "Wrinkles detected with 74% confidence"
+    }
+  ],
+  "skin_type": "combination",
+  "overall_health_score": 74,
+  "quality_score": 80,
+  "recommendations": [
+    {
+      "type": "product",
+      "title": "Salicylic Acid Cleanser",
+      "description": "Gentle daily cleanser to unclog pores",
+      "priority": "medium",
+      "category": "acne_treatment"
+    },
+    {
+      "type": "product",
+      "title": "Tea Tree Oil Serum",
+      "description": "Natural anti-inflammatory for mild acne",
+      "priority": "medium",
+      "category": "acne_treatment"
+    },
+    {
+      "type": "product",
+      "title": "Balancing Moisturizer",
+      "description": "Hydrates dry areas while controlling oil",
+      "priority": "medium",
+      "category": "moisturizer"
+    }
+  ],
+  "product_suggestions": [
+    {
+      "name": "Salicylic Acid Cleanser",
+      "type": "cleanser",
+      "description": "Gentle daily cleanser to unclog pores",
+      "category": "acne_treatment"
+    },
+    {
+      "name": "Tea Tree Oil Serum",
+      "type": "serum",
+      "description": "Natural anti-inflammatory for mild acne",
+      "category": "acne_treatment"
+    },
+    {
+      "name": "Balancing Moisturizer",
+      "type": "moisturizer",
+      "description": "Hydrates dry areas while controlling oil"
+    }
+  ],
+  "ai_model": {
+    "model_name": "SkinSpect-v0.1",
+    "model_version": "0.1.0",
+    "processing_time_ms": 250,
+    "confidence_threshold": 0.5
+  },
+  "follow_up_needed": false,
+  "has_changes": false,
+  "previous_scan_id": null
+}

@@ -1,0 +1,51 @@
+{
+  "scan_id": "ce25652a-7641-45a5-9f4c-60f19a734dff",
+  "user_id": null,
+  "image_url": "../tests/sample_images/test.jpg",
+  "thumbnail_url": null,
+  "analysis_date": "2026-07-25T17:53:47.675554Z",
+  "skin_conditions": [
+    {
+      "condition": "acne",
+      "confidence": 0.501,
+      "severity": "none",
+      "affected_area_percentage": 0,
+      "description": "Acne detected with 50% confidence"
+    },
+    {
+      "condition": "wrinkles",
+      "confidence": 1.0,
+      "severity": "none",
+      "affected_area_percentage": 0,
+      "description": "Wrinkles detected with 100% confidence"
+    }
+  ],
+  "skin_type": "combination",
+  "overall_health_score": 75,
+  "quality_score": 60,
+  "recommendations": [
+    {
+      "type": "product",
+      "title": "Balancing Moisturizer",
+      "description": "Hydrates dry areas while controlling oil",
+      "priority": "medium",
+      "category": "moisturizer"
+    }
+  ],
+  "product_suggestions": [
+    {
+      "name": "Balancing Moisturizer",
+      "type": "moisturizer",
+      "description": "Hydrates dry areas while controlling oil"
+    }
+  ],
+  "ai_model": {
+    "model_name": "SkinSpect-v0.1",
+    "model_version": "0.1.0",
+    "processing_time_ms": 250,
+    "confidence_threshold": 0.5
+  },
+  "follow_up_needed": false,
+  "has_changes": false,
+  "previous_scan_id": null
+}
