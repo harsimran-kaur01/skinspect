@@ -1,4 +1,4 @@
-﻿from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Form
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Form
 from fastapi.concurrency import run_in_threadpool
 from sqlalchemy.orm import Session
 from typing import Optional, List
@@ -23,7 +23,7 @@ from ..schemas.scan import (
     ProgressSummaryResponse,
     ScanErrorResponse,
 )
-from ..auth.dependencies import get_current_active_user, get_current_verified_user
+from ..auth.dependencies import get_current_active_user
 import logging
 
 logger = logging.getLogger(__name__)
@@ -92,9 +92,7 @@ async def upload_scan(
     sensitivity: Optional[bool] = Form(None),
     routine: Optional[str] = Form(None),
     lifestyle: Optional[str] = Form(None),
-    current_user: User = Depends(
-        get_current_verified_user
-    ),  # requires email verification
+    current_user: User = Depends(get_current_active_user),
     db: Session = Depends(get_db),
 ):
     # ---- 1. Validate content type --------------------------------------
@@ -135,7 +133,7 @@ async def upload_scan(
     # ---- 4. Save image ---------------------------------------------------
     timestamp = int(time.time())
     unique_id = str(uuid.uuid4())[:8]
-    file_ext = Path(file.filename).suffix or ".jpg"
+    file_ext = Path(file.filename or "").suffix or ".jpg"
     filename = f"{current_user.id}_{timestamp}_{unique_id}{file_ext}"
     file_path = UPLOAD_DIR / filename
 
@@ -204,7 +202,7 @@ async def upload_scan(
     if "skin_type" not in questionnaire:
         questionnaire["skin_type"] = result.get("skin_type", "combination")
 
-    # ---- 8. Add previous scan for progress tracking -------------------
+    # ---- 8. Add previous scan for progress tracking + variety ---------
     previous_scan = (
         db.query(SkinScan)
         .filter(SkinScan.user_id == current_user.id)
@@ -214,7 +212,17 @@ async def upload_scan(
     if previous_scan:
         questionnaire["previous_scan"] = {
             "overall_health_score": previous_scan.overall_health_score,
+            # Lets the engine report per-condition progress (e.g. acne
+            # moderate -> mild) instead of only the overall score.
+            "conditions": [
+                {"condition": c.condition, "severity": c.severity}
+                for c in previous_scan.conditions
+            ],
         }
+        # Lets the engine rotate lifestyle tips the user already saw.
+        questionnaire["previous_recommendations"] = [
+            r.title for r in previous_scan.recommendations
+        ]
 
     # ---- 9. Generate recommendations ----------------------------------
     progress_summary = None
@@ -222,8 +230,11 @@ async def upload_scan(
         engine_output = generate_recommendations(result, questionnaire)
         recommendations = engine_output.get("recommendations", [])
         progress_summary = engine_output.get("progress_summary")
-    except Exception as e:
-        logger.error(f"Recommendation engine error: {e}")
+        logger.info("Recommendation focus areas: %s", engine_output.get("focus_areas"))
+    except Exception:
+        # Full traceback on purpose: this fallback returns the pipeline's
+        # generic recommendations, which looks like "same advice every time".
+        logger.exception("Recommendation engine failed; using pipeline fallback")
         recommendations = result.get("recommendations", [])
 
     # ---- 10. Save to database ------------------------------------------
