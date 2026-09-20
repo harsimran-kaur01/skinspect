@@ -1,54 +1,42 @@
-# Python
+# ---------- Python ----------
+.venv/
 venv/
 __pycache__/
 *.pyc
-*.pyo
-*.pyd
-.Python
-*.so
-*.egg
+.pytest_cache/
 *.egg-info/
-dist/
-build/
-*.db
-*.sqlite3
 
-# Environment
+# ---------- Secrets / config ----------
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
 
-# IDE
-.idea/
-.vscode/
-*.swp
-*.swo
+# ---------- User data (real face images) ----------
+backend/uploads/
+uploads/
 
-# OS
-.DS_Store
-Thumbs.db
+# ---------- Node / frontend ----------
+node_modules/
+skinspect-frontend/dist/
+.vite/
+.vite-temp/
 
-# Logs
-*.log
-logs/
-
-# ML models (Phase 2)
-*.pth
-*.dat
+# ---------- Model weights (large) ----------
 *.pt
+*.pth
+*.onnx
+*.safetensors
+*.ckpt
 *.h5
 
-# Docker
-*.pid
+# ---------- Local helper output ----------
+tree.txt
+files.txt
+recs.txt
+tree_*.txt
 
-# Test coverage
-.coverage
-htmlcov/
-.pytest_cache/
-.tox/
-
-# Uploads
-backend/uploads/
-*.jpg
-*.png
-*.jpeg
+# ---------- OS / editor ----------
+Thumbs.db
+.DS_Store
+.vscode/
+.idea/
