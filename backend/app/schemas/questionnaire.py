@@ -5,36 +5,37 @@ from uuid import UUID
 
 
 class QuestionnaireSchema(BaseModel):
-    # Section A
+    # Section 1 – Basic Profile
     skin_type: Optional[str] = None
-    skin_tone: Optional[str] = None
+    age_group: Optional[str] = None
+    biological_sex: Optional[str] = None
 
-    # Section B
-    concerns: Optional[List[str]] = None
+    # Section 2 – Skin History & Safety
+    pregnant: Optional[str] = None
+    under_dermatologist_care: Optional[str] = None
+    allergies: Optional[List[str]] = None
+    diagnosed_conditions: Optional[List[str]] = None
 
-    # Section C
-    sensitivity_level: Optional[str] = None
-    reactions: Optional[List[str]] = None
+    # Sex-specific follow-ups (conditionally shown on the frontend)
+    hormonal_pattern: Optional[str] = None
+    shaving_irritation: Optional[str] = None
 
-    # Section D
+    # Section 3 – Current Routine
     routine_complexity: Optional[str] = None
     active_ingredients: Optional[List[str]] = None
-    exfoliation_freq: Optional[str] = None
     sunscreen_use: Optional[str] = None
 
-    # Section E
-    age_group: Optional[str] = None
+    # Section 4 – Lifestyle
     sun_exposure: Optional[str] = None
+    sleep_quality: Optional[str] = None
     stress_level: Optional[str] = None
-    sleep_hours: Optional[str] = None
-    water_intake: Optional[str] = None
     smoking: Optional[str] = None
-    alcohol_freq: Optional[str] = None
 
-    # Section F (preferences)
-    price_preference: Optional[str] = None
-    fragrance_preference: Optional[str] = None
-    ethical_preference: Optional[str] = None
+    # Section 5 – Goals
+    primary_concern: Optional[str] = None
+    secondary_concern: Optional[str] = None
+    budget: Optional[str] = None
+    routine_complexity_preference: Optional[str] = None
 
 
 class QuestionnaireResponse(BaseModel):
@@ -46,9 +47,6 @@ class QuestionnaireResponse(BaseModel):
 
     class Config:
         from_attributes = True
-
-
-# Add to existing questionnaire.py schema file
 
 
 class QuestionnaireDetailResponse(BaseModel):

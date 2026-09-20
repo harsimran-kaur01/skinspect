@@ -16,6 +16,8 @@ export default function QuestionnaireForm() {
     diagnosed_conditions: [],
     under_dermatologist_care: '',
     pregnant: '',
+    hormonal_pattern: '',
+    shaving_irritation: '',
     // Section 3 – Current Routine
     routine_complexity: '',
     active_ingredients: [],
@@ -32,6 +34,9 @@ export default function QuestionnaireForm() {
     routine_complexity_preference: 'moderate',
   })
 
+  // Sections are computed from form state so the safety section can
+  // include a sex-specific follow-up question without needing two
+  // separate hand-maintained question sets.
   const sections = [
     {
       title: 'Basic Profile',
@@ -39,7 +44,14 @@ export default function QuestionnaireForm() {
     },
     {
       title: 'Skin History & Safety',
-      fields: ['pregnant', 'under_dermatologist_care', 'allergies', 'diagnosed_conditions']
+      fields: [
+        'pregnant',
+        'under_dermatologist_care',
+        'allergies',
+        'diagnosed_conditions',
+        ...(form.biological_sex === 'female' ? ['hormonal_pattern'] : []),
+        ...(form.biological_sex === 'male' ? ['shaving_irritation'] : []),
+      ]
     },
     {
       title: 'Current Routine',
@@ -145,6 +157,30 @@ export default function QuestionnaireForm() {
               <option value="female">Female</option>
               <option value="male">Male</option>
               <option value="prefer-not-to-say">Prefer not to say</option>
+            </select>
+          </div>
+        )
+      case 'hormonal_pattern':
+        return (
+          <div>
+            <label className="block text-sm font-medium">Does your acne tend to flare around your cycle (jawline/chin breakouts)?</label>
+            <select name="hormonal_pattern" value={form.hormonal_pattern} onChange={handleChange} className="w-full p-2 border rounded">
+              <option value="">Select...</option>
+              <option value="yes">Yes, noticeably</option>
+              <option value="somewhat">Somewhat</option>
+              <option value="no">No / not sure</option>
+            </select>
+          </div>
+        )
+      case 'shaving_irritation':
+        return (
+          <div>
+            <label className="block text-sm font-medium">Do you get irritation or ingrown hairs from shaving?</label>
+            <select name="shaving_irritation" value={form.shaving_irritation} onChange={handleChange} className="w-full p-2 border rounded">
+              <option value="">Select...</option>
+              <option value="yes">Yes, regularly</option>
+              <option value="occasionally">Occasionally</option>
+              <option value="no">No / doesn't apply</option>
             </select>
           </div>
         )

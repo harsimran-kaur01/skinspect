@@ -40,3 +40,10 @@ Thumbs.db
 .DS_Store
 .vscode/
 .idea/
+**/sample_images/
+*.db
+*.sqlite3
+*.log
+logs/
+*.dat
+*.pid

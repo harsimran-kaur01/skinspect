@@ -1,47 +1,132 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { LineChart, Line, ResponsiveContainer } from 'recharts'
 import { useAuth } from '../context/AuthContext'
+import { getScanHistory } from '../api/scans'
+import Nav from '../components/Nav'
 import VerificationBanner from '../components/VerificationBanner'
 
+function greeting() {
+  const hour = new Date().getHours()
+  if (hour < 12) return 'Good morning'
+  if (hour < 18) return 'Good afternoon'
+  return 'Good evening'
+}
+
 export default function Dashboard() {
-  const { user, logout } = useAuth()
+  const { user } = useAuth()
+  const [recentScans, setRecentScans] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    getScanHistory(6, 0)
+      .then((scans) => setRecentScans(scans || []))
+      .catch(() => setRecentScans([]))
+      .finally(() => setLoading(false))
+  }, [])
+
+  const latest = recentScans[0]
+  const trendData = [...recentScans]
+    .reverse()
+    .map((s, i) => ({ i, score: s.overall_health_score ?? 0 }))
+
+  const firstName = user?.full_name?.split(' ')[0]
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow p-4 flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-blue-600">SkinSpect</h1>
-        <div className="flex items-center gap-4">
-          <span className="text-sm">Welcome, {user?.full_name || 'User'}</span>
-          <Link to="/profile" className="text-gray-600 text-sm hover:underline">Profile</Link>
-          <button onClick={logout} className="text-red-600 text-sm">Logout</button>
-        </div>
-      </nav>
+    <div className="min-h-screen bg-paper">
+      <Nav />
 
-      <VerificationBanner user={user} />
 
-      <div className="max-w-4xl mx-auto p-6">
-        <h2 className="text-3xl font-bold mb-2">Your Skin Health Dashboard</h2>
-        <p className="text-gray-600 mb-6">Start your assessment or track your progress</p>
+      <div className="max-w-5xl mx-auto px-6 py-16">
+        <p className="text-sm text-clay font-medium tracking-wide uppercase mb-3">
+          {greeting()}{firstName ? `, ${firstName}` : ''}
+        </p>
+        <h1 className="font-display text-4xl md:text-5xl text-ink leading-tight mb-4 max-w-xl">
+          Your skin, tracked with care.
+        </h1>
+        <p className="text-ink/60 max-w-md mb-10">
+          Run a new scan to see how your skin is changing, or pick up where you left off.
+        </p>
 
-        <div className="grid md:grid-cols-2 gap-4">
-          {/* Start Assessment → Goes to Questionnaire */}
-          <Link to="/questionnaire" className="bg-blue-50 p-6 rounded-lg shadow hover:shadow-lg transition border-2 border-blue-200">
-            <h3 className="text-xl font-semibold text-blue-700">📝 Start New Assessment</h3>
-            <p className="text-gray-600">Answer a few questions, then upload a photo for AI analysis</p>
+        <Link to="/questionnaire" className="btn-primary inline-block mb-14">
+          Start New Scan
+        </Link>
+
+        {/* Status row */}
+        {!loading && (
+          <div className="grid sm:grid-cols-2 gap-4 mb-14">
+            <div className="card p-6">
+              <p className="text-xs uppercase tracking-wide text-ink/50 mb-2">
+                Latest Score
+              </p>
+              {latest ? (
+                <p className="stat-number text-4xl text-sage">
+                  {latest.overall_health_score}
+                  <span className="text-lg text-ink/40">/100</span>
+                </p>
+              ) : (
+                <p className="text-ink/40 text-sm">No scans yet</p>
+              )}
+            </div>
+
+            <div className="card p-6">
+              <p className="text-xs uppercase tracking-wide text-ink/50 mb-2">
+                Recent Trend
+              </p>
+              {trendData.length > 1 ? (
+                <div className="h-12">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={trendData}>
+                      <Line
+                        type="monotone"
+                        dataKey="score"
+                        stroke="#4F5F4A"
+                        strokeWidth={2}
+                        dot={false}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              ) : (
+                <p className="text-ink/40 text-sm">Not enough data yet</p>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Navigation cards */}
+        <div className="grid md:grid-cols-3 gap-4">
+          <Link
+            to="/history"
+            className="card p-6 hover:border-sage transition-colors group"
+          >
+            <p className="text-xs uppercase tracking-wide text-ink/40 mb-2">01</p>
+            <h3 className="font-display text-lg text-ink mb-1 group-hover:text-sage transition-colors">
+              History
+            </h3>
+            <p className="text-sm text-ink/60">Every past scan, side by side.</p>
           </Link>
 
-          <Link to="/history" className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
-            <h3 className="text-xl font-semibold">📊 History</h3>
-            <p className="text-gray-600">View all your past scans and progress</p>
+          <Link
+            to="/derm"
+            className="card p-6 hover:border-sage transition-colors group"
+          >
+            <p className="text-xs uppercase tracking-wide text-ink/40 mb-2">02</p>
+            <h3 className="font-display text-lg text-ink mb-1 group-hover:text-sage transition-colors">
+              Dermatologists
+            </h3>
+            <p className="text-sm text-ink/60">Find care near you.</p>
           </Link>
 
-          <Link to="/derm" className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
-            <h3 className="text-xl font-semibold">🏥 Dermatologists</h3>
-            <p className="text-gray-600">Find nearby skin care professionals</p>
-          </Link>
-
-          <Link to="/profile" className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
-            <h3 className="text-xl font-semibold">👤 Profile</h3>
-            <p className="text-gray-600">Manage your account and settings</p>
+          <Link
+            to="/profile"
+            className="card p-6 hover:border-sage transition-colors group"
+          >
+            <p className="text-xs uppercase tracking-wide text-ink/40 mb-2">03</p>
+            <h3 className="font-display text-lg text-ink mb-1 group-hover:text-sage transition-colors">
+              Profile
+            </h3>
+            <p className="text-sm text-ink/60">Account and preferences.</p>
           </Link>
         </div>
       </div>

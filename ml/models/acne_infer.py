@@ -64,7 +64,7 @@ class AcneInfer:
             raise FileNotFoundError(f"Model file not found: {self.model_path}")
 
         model = AcneModel(num_classes=self.num_classes, dropout=self.dropout)
-        checkpoint = torch.load(self.model_path, map_location=self.device)
+        checkpoint = torch.load(self.model_path, map_location=self.device, weights_only=False)
 
         if "model_state_dict" in checkpoint:
             state_dict = checkpoint["model_state_dict"]

@@ -52,7 +52,7 @@ class WrinkleInfer:
             raise FileNotFoundError(f"Model file not found: {self.model_path}")
 
         model = WrinkleSegmentationModel()
-        checkpoint = torch.load(self.model_path, map_location=self.device)
+        checkpoint = torch.load(self.model_path, map_location=self.device, weights_only=False)
 
         if isinstance(checkpoint, dict):
             if "model_state_dict" in checkpoint:

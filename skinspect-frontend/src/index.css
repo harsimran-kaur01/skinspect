@@ -1,3 +1,46 @@
-@tailwind base;
+﻿@tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-paper text-ink font-sans antialiased;
+  }
+
+  h1, h2, h3 {
+    @apply font-display;
+  }
+
+  :focus-visible {
+    outline: 2px solid theme('colors.sage.DEFAULT');
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-sage text-paper px-5 py-2.5 rounded-sm font-medium tracking-wide
+           hover:bg-sage-dark transition-colors duration-150;
+  }
+
+  .btn-secondary {
+    @apply bg-transparent text-ink border border-line px-5 py-2.5 rounded-sm font-medium
+           hover:border-sage hover:text-sage transition-colors duration-150;
+  }
+
+  .card {
+    @apply bg-white/60 border border-line rounded-sm shadow-card;
+  }
+
+  .stat-number {
+    @apply font-mono tabular-nums;
+  }
+}
