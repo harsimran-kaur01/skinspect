@@ -17,8 +17,9 @@ services:
           name: skinspect-frontend
           property: host
 
-staticSites:
-  - name: skinspect-frontend
+  - type: web
+    name: skinspect-frontend
+    env: static
     rootDir: skinspect-frontend
     buildCommand: npm install && npm run build
     staticPublishPath: dist
